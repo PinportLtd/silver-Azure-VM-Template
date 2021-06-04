@@ -1,0 +1,119 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "Require":{
+        "value": {
+          "NSG": true,
+          "PIPaddress": true,
+          "BootDiags": true,
+          "LogAnalytics": true,
+          "DSCScript": true,
+          "CustomScript": true
+        }
+      },
+      "tags": {
+        "value": {
+          "Environment": "TODO",
+          "ProjectName": "TODO",
+          "BusinessUnit": "TODO",
+          "classificaiton": "TODO",
+          "Costcentre": "TODO",
+          "Division": "TODO",
+          "Customer": "TODO"
+        }
+      },
+      "Network": {
+        "value": {
+          "rsg": "network-rsg",
+          "vNetName": "vnet-01",
+          "SubnetName": "app-sub"
+        }
+      },
+      "networkSecurityGroupName": {
+        "value": "app-nsg"
+      },
+  
+      "virtualMachineName": {
+        "value": "WWwinlin"
+      },
+      "VMSize": {
+        "value": "Standard_d2_v3"
+      },
+      "adminUsername": {
+        "value": "youradmin"
+      },
+      "authenticationType": {
+        "value": "sshPublicKey"
+      },
+      "adminPasswordOrKey": {
+        "reference": {
+          "keyVault": {
+            "id": "/subscriptions/<subscriptionid>/resourceGroups/<resourcegroupname>/providers/Microsoft.KeyVault/vaults/<keyvaultname>"
+          },
+          "secretName": "localadm"
+        }
+      },
+      "operatingSystem": {
+        "value": "WindowsServer_2019-DataCenter"
+      },
+      "artifactsLocation": {
+        "value": ".blob.core.windows.net/"
+      },
+      "protocol": {
+        "value": "https://"
+      },
+      "artifactsstorageaccount": {
+        "value": "Storage Account Name where the extensions are kept"
+      },
+      "artifactsLocationSasToken": {
+        "reference": {
+          "keyVault": {
+            "id": "/subscriptions/<subscriptionid>/resourceGroups/<resourcegroupname>/providers/Microsoft.KeyVault/vaults/<keyvaultname>"
+          },
+          "secretName": "SASTokenSecretName - this is to access the storage account where the extensions are kept"
+        }
+      },
+      "DSCScriptParams": {
+        "value": {
+          "StorageAccountName": "StorageAccountName",
+          "ScriptContainerName": "ContainerName",
+          "ZipFileName": "genericvmconfig.ps1.zip",
+          "Script": "genericvmconfig.ps1",
+          "Function": "AllServers",
+          "OctopusServerUrl": "https://octopus.azure.com",
+          "OctopusRoles": ["TestServers"],
+          "OctopusEnvironments": ["Dev Test Environment"],
+          "JoinOU": "OU=TestServers,OU=Servers,OU=Sites,DC=company,DC=local",
+          "DomainUsername": "SVCAcc@company.local - the user used to join the machine to the domain"
+        }
+      },
+      "CustomScriptParams": {
+        "value": {
+          "Name": "filename.ps1",
+          "FileUris": "https://storageaccountname.blob.core.windows.net/containername/filename.ps1",
+          "StorageAccountName": "storage account name of where the custom script is",
+          "TimeStamp": 1
+        }
+      },
+      "LogAnalyticsParams": {
+        "value": {
+          "Name": "Loganalytics101",
+          "rsg": "Loganalytics-rsg"
+        }
+      },
+      "keyVaultParams": {
+        "value": {
+          "rsg": "mgmt-rsg",
+          "Name": "keyvaultname",
+          "Secrets": {
+            "CustomScriptStorageAccessKey": "the storage access key of where the custom script is",
+            "DomainUserPassword": "the secret name of the domain user password, used for the dsc script to join to the domain",
+            "DSCStorageAccountSasToken": "the secret name of the storage account sas token, used to access the storage accoun that contains the DSC script",
+            "OctopusAPIKey": "the secret name of the octopus api key, used to access octopus and setup the tentacle on this VM."
+          }
+        }
+      }
+    }
+  }
+  

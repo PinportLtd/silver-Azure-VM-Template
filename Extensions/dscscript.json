@@ -1,0 +1,101 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "location": {
+        "type": "string"
+      },
+      "artifactslocation": {
+        "type": "string"
+      },
+      "protocol": {
+        "type": "string"
+      },
+      "vmName": {
+        "type": "string"
+      },
+      "DSCStorageAccountName": {
+        "type": "string"
+      },
+      "DSCStorageAccountSasToken": {
+        "type": "string"
+      },
+      "DSCScriptContainerName": {
+        "type": "string"
+      },
+      "DSCZipFileName": {
+        "type": "string"
+      },
+      "DSCSCript": {
+        "type": "string"
+      },
+      "DSCFunction": {
+        "type": "string"
+      },
+      "OctopusAPIKey": {
+        "type": "string"
+      },
+      "OctopusServerUrl": {
+        "type": "string"
+      },
+      "OctopusEnvironments": {
+        "type": "array"
+      },
+      "OctopusRoles": {
+        "type": "array"
+      },
+      "JoinOU": {
+        "type": "string"
+      },
+      "DomainUsername": {
+        "type": "string"
+      },
+      "DomainUserPassword": {
+        "type": "string"
+      }
+    },
+  
+    "variables": {},
+  
+    "resources": [
+      {
+        "comments": "THIS IS THE DSC SCRIPT EXTENSION RESOURCE",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(parameters('vmName'),'/Microsoft.Powershell.DSC')]",
+        "location": "[parameters('location')]",
+        "properties": {
+          "publisher": "Microsoft.Powershell",
+          "type": "DSC",
+          "typeHandlerVersion": "2.26",
+          "autoUpgradeMinorVersion": true,
+          "forceUpdateTag": "1.1",
+          "settings": {
+            "configuration": {
+              "url": "[concat(parameters('protocol'),parameters('DSCStorageAccountName'),parameters('artifactslocation'),parameters('DSCScriptContainerName'),'/',parameters('DSCZipFileName'))]",
+              "script": "[parameters('DSCScript')]",
+              "Function": "[parameters('DSCFunction')]"
+            },
+            "configurationArguments": {
+              "OctopusAPIKey": "[parameters('OctopusAPIKey')]",
+              "OctopusServerUrl": "[parameters('OctopusServerUrl')]",
+              "OctopusEnvironments": "[parameters('OctopusEnvironments')]",
+              "OctopusRoles": "[parameters('OctopusRoles')]",
+              "JoinOU": "[parameters('JoinOU')]"
+            }
+          },
+          "protectedSettings": {
+            "configurationUrlSasToken": "[parameters('DSCStorageAccountSasToken')]",
+            "configurationArguments": {
+              "Credential": {
+                "userName": "[parameters('DomainUsername')]",
+                "password": "[parameters('DomainUserPassword')]"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "outputs": {}
+  }
+  

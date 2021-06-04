@@ -1,0 +1,47 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "location": {
+        "type": "string"
+      },
+      "isWindowsOS": {
+        "type": "bool"
+      },
+      "LogAnalyticsrsg": {
+        "type": "string"
+      },
+      "WorkspaceName": {
+        "type": "string"
+      },
+      "vmName": {
+        "type": "string"
+      }
+    },
+  
+    "variables": {},
+  
+    "resources": [
+      {
+        "comments": "THIS IS LOG ANALYTICS RESOURCE FOR LINUX AND WINDOWS VM's.",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(parameters('vmName'),'/OMSExtension')]",
+        "apiVersion": "2020-12-01",
+        "location": "[parameters('location')]",
+        "properties": {
+          "publisher": "Microsoft.EnterpriseCloud.Monitoring",
+          "type": "[if(parameters('isWindowsOS'),'MicrosoftMonitoringAgent','OmsAgentForLinux')]",
+          "typeHandlerVersion": "[if(parameters('isWindowsOS'), '1.0', '1.10')]",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "workspaceId": "[reference(resourceId(parameters('LogAnalyticsrsg'),'Microsoft.OperationalInsights/workspaces/', parameters('workspaceName')), '2020-08-01').customerId]"
+          },
+          "protectedSettings": {
+            "workspaceKey": "[listKeys(resourceId(parameters('LogAnalyticsrsg'),'Microsoft.OperationalInsights/workspaces/', parameters('workspaceName')), '2020-08-01').primarySharedKey]"
+          }
+        }
+      }
+    ],
+    "outputs": {}
+  }
+  

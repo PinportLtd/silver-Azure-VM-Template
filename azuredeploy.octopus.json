@@ -1,0 +1,120 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "Require":{
+        "value": {
+          "NSG": "#{Silver.Azure.Require.NSG}",
+          "PIPaddress": "#{Silver.Azure.Require.PIPaddress}",
+          "BootDiags": "#{Silver.Azure.Require.BootDiags}",
+          "LogAnalytics": "#{Silver.Azure.Require.LogAnalytics}",
+          "DSCScript": "#{Silver.Azure.Require.DSCScript}",
+          "CustomScript": "#{Silver.Azure.Require.CustomScript}"
+        }
+      },
+      "tags": {
+        "value": {
+          "Environment": "#{Tags.Environment}",
+          "ProjectName": "#{Tags.ProjectName}",
+          "BusinessUnit": "#{Tags.BusinessUnit}",
+          "classificaiton": "#{Tags.Classification}",
+          "Costcentre": "#{Tags.CostCentre}",
+          "Division": "#{Tags.Division}",
+          "Customer": "#{Tags.Customer}"
+        }
+      },
+      "Network": {
+        "value": {
+          "rsg": "#{Silver.Azure.Network.rsg}",
+          "vNetName": "#{Silver.Azure.Network.vNetName}",
+          "SubnetName": "#{Silver.Azure.Network.SubnetName}"
+        }
+      },
+      "networkSecurityGroupName": {
+        "value": "#{Silver.Azure.networkSecurityGroupName}"
+      },
+      "virtualMachineName": {
+        "value": "#{Silver.Azure.VM.virtualMachineName}"
+      },
+      "VMSize": {
+        "value": "#{Silver.Azure.VM.Size}"
+      },
+      "adminUsername": {
+        "value": "#{Silver.Azure.VM.adminUsername}"
+      },
+      "authenticationType": {
+        "value": "#{Silver.Azure.VM.authenticationType}"
+      },
+      "adminPasswordOrKey": {
+        "reference": {
+          "keyVault": {
+            "id": "#{Silver.Azure.VM.adminPasswordOrKey.KeyVault.id}"
+          },
+          "secretName": "#{Silver.Azure.VM.adminPasswordOrKey.secretName}"
+        }
+      },
+      "operatingSystem": {
+        "value": "#{Silver.Azure.VM.OperatingSystem}"
+      },
+      "artifactsLocation": {
+        "value": "#{Silver.Azure.VM.artifactsLocation}"
+      },
+      "protocol": {
+        "value": "#{Silver.Azure.VM.protocol}"
+      },
+      "artifactsstorageaccount": {
+        "value": "#{Silver.Azure.VM.artifactsStorageAccount}"
+      },
+      "artifactsLocationSasToken": {
+        "reference": {
+          "keyVault": {
+            "id": "#{Silver.Azure.VM.artifactsLocationSasToken.KeyVault.Id}"
+          },
+          "secretName": "#{Silver.Azure.VM.artifactsLocationSasToken.secretName}"
+        }
+      },
+      "DSCScriptParams": {
+        "value": {
+          "StorageAccountName": "#{Silver.Azure.DSCScript.StorageAccountName}",
+          "ScriptContainerName": "#{Silver.Azure.DSCScript.ScriptContainerName}",
+          "ZipFileName": "#{Silver.Azure.DSCSCript.ZipFileName}",
+          "Script": "#{Silver.Azure.DSCScript.Script}",
+          "Function": "#{Silver.Azure.DSCScript.Function}",
+          "OctopusServerUrl": "#{Silver.Azure.DSCScript.Octopus.ServerUrl}",
+          "OctopusRoles": ["#{Silver.Azure.DSCScript.Octopus.Roles}"],
+          "OctopusEnvironments": [
+            "#{Silver.Azure.DSCScript.Octopus.Environments}"
+          ],
+          "JoinOU": "#{Silver.Azure.DSCScript.Joinou}",
+          "DomainUsername": "#{Silver.Azure.DSCScript.JoinOU.DomainUsername}"
+        }
+      },
+      "CustomScriptParams": {
+        "value": {
+          "Name": "#{Silver.Azure.CustomScript.Name}",
+          "FileUris": "#{Silver.Azure.CustomScript.FileUris}",
+          "StorageAccountName": "#{Silver.Azure.CustomScript.StorageAccountName}",
+          "TimeStamp": "#{Silver.Azure.CustomScript.TimeStamp}"
+        }
+      },
+      "LogAnalyticsParams": {
+        "value": {
+          "Name": "#{Silver.Azure.LogAnalytics.Name}",
+          "rsg": "#{Silver.Azure.LogAnalytics.rsg}"
+        }
+      },
+      "keyVaultParams": {
+        "value": {
+          "rsg": "#{Silver.Azure.KeyVault.rsg}",
+          "Name": "#{Silver.Azure.KeyVault.Name}",
+          "Secrets": {
+            "CustomScriptStorageAccessKey": "#{Silver.Azure.CustomScript.StorageAccessKey}",
+            "DomainUserPassword": "{Silver.Azure.DSCScript.JoinOU.DomainUserPassword.secretName}",
+            "DSCStorageAccountSasToken": "#{Silver.Azure.DSCScript.StorageAccountSASToken.secretName}",
+            "OctopusAPIKey": "{Silver.Azure.DSCScript.Octopus.ApiKey.secretName}"
+          }
+        }
+      }
+    }
+  }
+  

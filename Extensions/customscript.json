@@ -1,0 +1,59 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "location": {
+        "type": "string"
+      },
+      "isWindowsOS": {
+        "type": "bool"
+      },
+      "CustomScriptTimeStamp": {
+        "type": "int"
+      },
+      "CustomScriptfileUris": {
+        "type": "string"
+      },
+      "CustomScriptName": {
+        "type": "string"
+      },
+      "CustomScriptStorageAccountName": {
+        "type": "string"
+      },
+      "CustomScriptStorageAccessKey": {
+        "type": "string"
+      },
+      "vmName": {
+        "type": "string"
+      }
+    },
+  
+    "variables": {},
+  
+    "resources": [
+      {
+        "comments": "THIS IS THE CUSTOM SCRIPT EXTENSION RESOURCE",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(parameters('vmName'),'/','CustomScript')]",
+        "location": "[parameters('location')]",
+        "properties": {
+          "publisher": "[if(parameters('isWindowsOS'),'Microsoft.Compute', 'Microsoft.Azure.Extensions')]",
+          "type": "[if(parameters('isWindowsOS'),'CustomScriptExtension', 'CustomScript')]",
+          "typeHandlerVersion": "[if(parameters('isWindowsOS'), '1.10', '2.0')]",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "timestamp": "[parameters('CustomScripttimestamp')]",
+            "fileUris": ["[parameters('CustomScriptfileUris')]"],
+            "commandToExecute": "[if(parameters('isWindowsOS'),concat('powershell -ExecutionPolicy Unrestricted -file ',parameters('CustomscriptName')),concat('./', parameters('CustomscriptName')))]"
+          },
+          "protectedSettings": {
+            "storageAccountName": "[parameters('CustomScriptStorageAccountName')]",
+            "storageAccountKey": "[parameters('CustomScriptStorageAccessKey')]"
+          }
+        }
+      }
+    ],
+    "outputs": {}
+  }
+  
